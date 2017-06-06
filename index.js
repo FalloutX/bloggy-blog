@@ -3,13 +3,13 @@ import bodyParser from 'body-parser'
 import passport from 'passport'
 import session from 'express-session'
 import mongoose from 'mongoose'
-import connectMongo from 'connect-mongo'
 import morgan from 'morgan'
 import myRoutes from './routes/index'
 import config from './config'
 import User from './models/User'
 import authTwitter from './authTwitter'
 import jwtStrategy from './jwtStrategy'
+
 /**
  * configureApp - adds configuration and bootstraps express App.
  *
@@ -17,18 +17,19 @@ import jwtStrategy from './jwtStrategy'
  */
 function configureApp () {
   const app = express()
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }))
   mongoose.connect(config.database.url)
-  const MongoStore = connectMongo(session)
+
+  // Use native promises
+  mongoose.Promise = global.Promise
 
   mongoose.connection.on('error', function (err) {
     console.error('MongoDB error: %s', err)
   })
 
-
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }))
 
   app.use(session({
     secret: config.express.secret,
@@ -60,6 +61,8 @@ function configureApp () {
 }
 
 const app = configureApp()
+
+
 
 
 app.listen(config.server.PORT, () => {
