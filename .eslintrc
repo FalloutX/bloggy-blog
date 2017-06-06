@@ -1,0 +1,12 @@
+{
+  "extends": ["standard"],
+  "env": {
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "plugins": ["babel"],
+  "rules": {
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 1}],
+    "standard/no-callback-literal": 0
+  }
+}
