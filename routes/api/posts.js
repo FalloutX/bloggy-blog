@@ -62,8 +62,11 @@ export default function posts (router) {
       Post.findById(id)
         .exec()
         .then((post) => {
-          if (post) res.json(post)
-          else res.status(404).json({info: 'not found'})
+          if (post) {
+            res.json(post)
+          } else {
+            res.status(404).json({info: 'not found'})
+          }
         })
         .catch((err) => {
           res.status(500).json(err)
@@ -121,6 +124,34 @@ export default function posts (router) {
         })
         .then((post) => {
           console.log('Post Removed')
+          res.json(post)
+        })
+        .catch((err) => {
+          res.status(500).json(err)
+        })
+    }
+  )
+
+  router.post('/posts/:id/like',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+      let { id } = req.params
+      if (!isValidObjectID(id)) {
+        res.status(404).json({info: 'not found'})
+      }
+
+      Post.findById(id)
+        .exec()
+        .then((post) => {
+          if (post) {
+            post.addLike(req.user)
+            return post.save()
+          } else {
+            res.status(404).json({info: 'not found'})
+          }
+        })
+        .then((post) => {
+          console.log('Post Liked by you!')
           res.json(post)
         })
         .catch((err) => {

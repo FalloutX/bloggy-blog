@@ -20,4 +20,16 @@ postSchema.methods.updateData = function (data) {
   this.last_modified_at = data.last_modified_at || this.last_modified_at
 }
 
+postSchema.methods.addLike = function (user) {
+  if (this.likes.indexOf(user._id) === -1) {
+    this.likes.push(user._id)
+  }
+}
+
+postSchema.methods.addView = function (user) {
+  if (this.views.indexOf(user._id) !== -1) {
+    this.views.push(user._id)
+  }
+}
+
 export default mongoose.model('Post', postSchema)
