@@ -11,16 +11,6 @@ router.get('/twitter',
   })
 )
 
-router.get('/guess/user',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    if (req.user) {
-      res.json({info: 'successfully-booted-up', user: req.user, token: req.user.appToken})
-    } else {
-      res.json({info: 'successfully-booted-up', login: 'http://127.0.0.1:3001/login/twitter'})
-    }
-  }
-)
 
 router.get('/twitter/return',
   passport.authenticate('twitter', {
@@ -29,7 +19,7 @@ router.get('/twitter/return',
   }),
   (req, res) => {
     // Redirect to frontend server with the access token in the request
-    res.redirect(`${config.frontend.server}user?jwt=${req.user.appToken}`)
+    res.redirect(`${config.frontend.server}auth?jwt=${req.user.appToken}`)
   })
 
 

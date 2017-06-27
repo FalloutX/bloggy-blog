@@ -7,6 +7,15 @@ function generateJWT (username) {
   return jwt.sign({ username }, config.jwt.secret, { expiresIn: 60 * 60 * 24 * 100 })
 }
 
+function getFullProfilePicURL (picURL) {
+  const normalStart = picURL.indexOf('_normal')
+  if (normalStart !== -1) {
+    return picURL.slice(0, normalStart) + '.jpg'
+  } else {
+    return picURL
+  }
+}
+
 const authTwitter = new passportTwitter.Strategy({
   consumerKey: config.twitter.consumerKey,
   consumerSecret: config.twitter.consumerSecret,
@@ -24,7 +33,7 @@ const authTwitter = new passportTwitter.Strategy({
       user.twitterAccessTokenSecret = tokenSecret
       user.followers = profile._json.followers_count
       user.following = profile._json.friends_count
-      user.photo = profile._json.profile_image_url
+      user.photo = getFullProfilePicURL(profile._json.profile_image_url)
       user.displayName = profile._json.name
       user.save(function (err) {
         if (err) {
@@ -42,7 +51,7 @@ const authTwitter = new passportTwitter.Strategy({
         twitterAccessTokenSecret: tokenSecret,
         followers: profile._json.followers_count,
         following: profile._json.friends_count,
-        photo: profile._json.profile_image_url,
+        photo: getFullProfilePicURL(profile._json.profile_image_url),
         displayName: profile._json.name
       })
       newUser.save(function (err) {

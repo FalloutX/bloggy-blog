@@ -27,7 +27,7 @@ postSchema.methods.addLike = function (user) {
 }
 
 postSchema.methods.addView = function (user) {
-  if (this.views.indexOf(user._id) !== -1) {
+  if (this.views.indexOf(user._id) === -1) {
     this.views.push(user._id)
   }
 }
